@@ -1,0 +1,88 @@
+/*
+ Arduino core for ESP32 example: output PWM to GPIO using ledcWrite()
+ Modify from the example code:
+ /ESP32/examples/AnalogOut/LEDCSoftwareFade
+*/
+
+// use first 3 channels of 16 channels (started from zero)
+#define LEDC_CHANNEL_0_R  0
+#define LEDC_CHANNEL_1_G  1
+#define LEDC_CHANNEL_2_B  2
+
+// use 13 bit precission for LEDC timer
+#define LEDC_TIMER_13_BIT  13
+
+// use 5000 Hz as a LEDC base frequency
+#define LEDC_BASE_FREQ     5000
+
+// LED PINs
+#define LED_PIN_R   21
+#define LED_PIN_G   22
+#define LED_PIN_B   23
+
+// Arduino like analogWrite
+// value has to be between 0 and valueMax
+void ledcAnalogWrite(uint8_t channel, uint32_t value, uint32_t valueMax = 255) {
+  // calculate duty
+  uint32_t duty = (LEDC_BASE_FREQ / valueMax) * min(value, valueMax);
+
+  // write duty to LEDC
+  ledcWrite(channel, duty);
+}
+
+void setup() {
+  // Setup timer and attach timer to a led pins
+  ledcSetup(LEDC_CHANNEL_0_R, LEDC_BASE_FREQ, LEDC_TIMER_13_BIT);
+  ledcAttachPin(LED_PIN_R, LEDC_CHANNEL_0_R);
+  ledcSetup(LEDC_CHANNEL_1_G, LEDC_BASE_FREQ, LEDC_TIMER_13_BIT);
+  ledcAttachPin(LED_PIN_G, LEDC_CHANNEL_1_G);
+  ledcSetup(LEDC_CHANNEL_2_B, LEDC_BASE_FREQ, LEDC_TIMER_13_BIT);
+  ledcAttachPin(LED_PIN_B, LEDC_CHANNEL_2_B);
+}
+
+void loop() {
+  ledcAnalogWrite(LEDC_CHANNEL_0_R, 0);
+  ledcAnalogWrite(LEDC_CHANNEL_1_G, 0);
+  ledcAnalogWrite(LEDC_CHANNEL_2_B, 0);
+  delay(1000);
+
+  for(int i = 0; i < 255; i++){
+    ledcAnalogWrite(LEDC_CHANNEL_0_R, i);
+    delay(10);
+  }
+  for(int i = 255; i > 0; i--){
+    ledcAnalogWrite(LEDC_CHANNEL_0_R, i);
+    delay(10);
+  }
+
+  for(int i = 0; i < 255; i++){
+    ledcAnalogWrite(LEDC_CHANNEL_1_G, i);
+    delay(10);
+  }
+  for(int i = 255; i > 0; i--){
+    ledcAnalogWrite(LEDC_CHANNEL_1_G, i);
+    delay(10);
+  }
+
+  for(int i = 0; i < 255; i++){
+    ledcAnalogWrite(LEDC_CHANNEL_2_B, i);
+    delay(10);
+  }
+  for(int i = 255; i > 0; i--){
+    ledcAnalogWrite(LEDC_CHANNEL_2_B, i);
+    delay(10);
+  }
+
+  for(int i = 0; i < 255; i++){
+    ledcAnalogWrite(LEDC_CHANNEL_0_R, i);
+    ledcAnalogWrite(LEDC_CHANNEL_1_G, i);
+    ledcAnalogWrite(LEDC_CHANNEL_2_B, i);
+    delay(10);
+  }
+  for(int i = 255; i > 0; i--){
+    ledcAnalogWrite(LEDC_CHANNEL_0_R, i);
+    ledcAnalogWrite(LEDC_CHANNEL_1_G, i);
+    ledcAnalogWrite(LEDC_CHANNEL_2_B, i);
+    delay(10);
+  }
+}
