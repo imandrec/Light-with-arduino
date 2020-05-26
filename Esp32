@@ -1,0 +1,131 @@
+/*Program to control LED (ON/OFF) from ESP32 using Serial Bluetooth
+ * Thanks to Neil Kolbans for his efoorts in adding the support to Arduino IDE
+ * Turotial on: www.circuitdigest.com 
+ */
+
+#include "BluetoothSerial.h" //Header File for Serial Bluetooth, will be added by default into Arduino
+#define LEDC_CHANNEL_0_R  0
+#define LEDC_CHANNEL_1_G  1
+#define LEDC_CHANNEL_2_B  2
+BluetoothSerial ESP_BT; //Object for Bluetooth
+
+int LED  = 2;
+
+
+// use 13 bit precission for LEDC timer
+#define LEDC_TIMER_13_BIT  13
+
+// use 5000 Hz as a LEDC base frequency
+#define LEDC_BASE_FREQ     5000
+
+// LED PINs
+#define LED_PIN_R   21
+#define LED_PIN_G   22
+#define LED_PIN_B   23
+
+void ledcAnalogWrite(uint8_t channel, uint32_t value, uint32_t valueMax = 255) {
+    // calculate duty
+    uint32_t duty = (LEDC_BASE_FREQ / valueMax) * min(value, valueMax);
+  
+    // write duty to LEDC
+    ledcWrite(channel, duty);
+}
+
+void setup() {
+  // Setup timer and attach timer to a led pins
+  ledcSetup(LEDC_CHANNEL_0_R, LEDC_BASE_FREQ, LEDC_TIMER_13_BIT);
+  ledcAttachPin(LED_PIN_R, LEDC_CHANNEL_0_R);
+  ledcSetup(LEDC_CHANNEL_1_G, LEDC_BASE_FREQ, LEDC_TIMER_13_BIT);
+  ledcAttachPin(LED_PIN_G, LEDC_CHANNEL_1_G);
+  ledcSetup(LEDC_CHANNEL_2_B, LEDC_BASE_FREQ, LEDC_TIMER_13_BIT);
+  ledcAttachPin(LED_PIN_B, LEDC_CHANNEL_2_B);
+  Serial.begin(115200); //Start Serial monitor in 9600
+  ESP_BT.begin("ESP32_LED_Control"); //Name of your Bluetooth Signal
+  Serial.println("Bluetooth Device is Ready to Pair");
+  //pinMode (LED, OUTPUT);//Specify that LED pin is output
+
+}
+
+class BluettoothEnable{
+    protected:
+          int incomingchar;
+    public:
+          BluettoothEnable():incomingchar{0}{ // Initialization
+            if (ESP_BT.available()) //Check if we receive anything from Bluetooth
+            {
+              incomingchar = ESP_BT.read(); //Read what we receive 
+              Serial.print("Received:");
+              //incomingchar = readvalues;
+              Serial.println(incomingchar);
+            }
+          }         
+          //void setincomingchar() { // setter 
+              //readvalues = ESP_BT.read(); //Read what we recevive 
+              //incomingchar = readvalues;
+              //Serial.println(incomingchar);
+            //}   
+         // int getincomingchar() { // getter
+            //  Serial.println(incomingchar);
+              //return incomingchar;   
+           //}               
+           
+};  
+
+class Lightcontrol: public BluettoothEnable{
+    public:
+          Lightcontrol():BluettoothEnable(){};
+          void ledcAnalogWrite(uint8_t channel, uint32_t value, uint32_t valueMax = 255) {
+              // calculate duty
+              uint32_t duty = (LEDC_BASE_FREQ / valueMax) * min(value, valueMax);
+              Serial.println(duty);
+              Serial.println(channel);
+            
+              // write duty to LEDC
+              ledcWrite(channel, duty);
+          }
+          void manualcontrol(){
+                if (incomingchar == 49) // busy
+                  {
+                  ledcAnalogWrite(LEDC_CHANNEL_0_R, 255);
+                  ledcAnalogWrite(LEDC_CHANNEL_1_G, 0);
+                  ledcAnalogWrite(LEDC_CHANNEL_2_B, 0);
+                  //digitalWrite(LED, HIGH);
+                  ESP_BT.println("Busy");    
+                  }              
+                else if (incomingchar == 50) // Available
+                  {
+                  ledcAnalogWrite(LEDC_CHANNEL_1_G, 255);
+                  ledcAnalogWrite(LEDC_CHANNEL_0_R, 0);
+                  ledcAnalogWrite(LEDC_CHANNEL_2_B, 0);
+                  //digitalWrite(LED, LOW);
+                  ESP_BT.println("Available");
+                  }
+                else if (incomingchar == 51) // Away
+                  {
+                  ledcAnalogWrite(LEDC_CHANNEL_2_B, 0);
+                  ledcAnalogWrite(LEDC_CHANNEL_0_R, 255);
+                  ledcAnalogWrite(LEDC_CHANNEL_1_G, 255);
+                  //digitalWrite(LED, LOW);
+                  ESP_BT.println("Away");
+                  }
+                else if (incomingchar == 48) // Off
+                  {
+                  ledcAnalogWrite(LEDC_CHANNEL_2_B, 0);
+                  ledcAnalogWrite(LEDC_CHANNEL_0_R, 0);
+                  ledcAnalogWrite(LEDC_CHANNEL_1_G, 0);
+                  //digitalWrite(LED, LOW);
+                  ESP_BT.println("Away");
+                  }                                    
+          }
+ };
+void loop() {
+  //BluettoothEnable readobject;
+  //readobject.Bluetoothavailable(); 
+  Lightcontrol ControlLight;
+  //readobject.getincomingchar(); 
+  ControlLight.manualcontrol();
+  delay(20);
+  }
+
+  
+ 
