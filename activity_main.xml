@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    tools:context=".MainActivity">
+    <!--display whether bluetooth is available or not-->
+    <TextView
+        android:id="@+id/statusbluetoothTv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textAlignment="center"
+        android:textSize="20sp" />
+    <!--bluetooth icon on/off-->
+    <ImageView
+        android:id="@+id/bluetoothiv"
+        android:layout_width="100dp"
+        android:layout_height="100dp"/>
+    <!--On Button-->
+    <Button
+        android:id="@+id/onbtn"
+        android:minWidth="200dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Turn On"
+        style="@style/TextAppearance.AppCompat.Button"/>
+    <!--Off Button-->
+    <Button
+        android:id="@+id/offbtn"
+        android:minWidth="200dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Turn Off"
+        style="@style/TextAppearance.AppCompat.Button"/>
+    <!--Discoverable Button-->
+    <Button
+        android:id="@+id/discoverablebtn"
+        android:minWidth="200dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Discoverable"
+        style="@style/TextAppearance.AppCompat.Button"/>
+    <!--Get list of paired devices Button-->
+    <Button
+        android:id="@+id/pairedbtn"
+        android:minWidth="200dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Get Paired Devices"
+        style="@style/TextAppearance.AppCompat.Button"/>
+    <!--show paired devices list-->
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/pairedlv"
+        android:layout_below="@+id/textView"
+        android:layout_alignRight="@+id/imageView"
+        android:layout_alignEnd="@+id/imageView"
+        android:layout_above="@+id/button" />
+
+</LinearLayout>
