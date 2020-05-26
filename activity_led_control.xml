@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+
+    android:gravity="center_horizontal"
+    tools:context=".ledControl">
+    <TextView
+        android:text="LED Controller "
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textSize="20sp" />
+
+    <Button
+        android:id="@+id/LED_on_btn"
+        android:minWidth="200dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Available"
+        style="@style/TextAppearance.AppCompat.Button"/>
+
+    <Button
+        android:id="@+id/Away_btn"
+        android:minWidth="200dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Away"
+        style="@style/TextAppearance.AppCompat.Button"/>
+
+    <Button
+        android:id="@+id/Busy_btn"
+        android:minWidth="200dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Busy"
+        style="@style/TextAppearance.AppCompat.Button"/>
+
+    <Button
+        android:id="@+id/LED_off_btn"
+        android:minWidth="200dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Off"
+        style="@style/TextAppearance.AppCompat.Button"/>
+
+    <Button
+        android:id="@+id/dis_btn"
+        android:minWidth="200dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Disconnect"
+        style="@style/TextAppearance.AppCompat.Button"/>
+
+    <!-- <Button
+        android:id="@+id/abt_btn"
+        android:minWidth="200dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="About"
+        style="@style/TextAppearance.AppCompat.Button"/>-->
+
+
+</LinearLayout>
